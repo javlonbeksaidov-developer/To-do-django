@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{# Bolalar shablon: {% block title %} va {% block heading %} ni to'ldiradi #}
+{% block title %}Forma{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="#" data-back>‹ Orqaga</a></div>
+    <h1>{% block heading %}Ma'lumot kiritish{% endblock %}</h1>
+  </div>
+</div>
+<form method="post" enctype="multipart/form-data" class="card" novalidate>
+  <div class="card-body">
+    {% csrf_token %}
+    <div class="form-grid">{% include "includes/form_fields.html" %}</div>
+    {% block extra_fields %}{% endblock %}
+    <div class="form-actions">
+      <a class="btn" href="#" data-back>Bekor qilish</a>
+      <button class="btn btn-primary" type="submit">Saqlash</button>
+    </div>
+  </div>
+</form>
+{% endblock %}

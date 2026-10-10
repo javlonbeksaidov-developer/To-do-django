@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Uy-joylar{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Uy-joylar</h1><p>Sotuv va ijara uchun obyektlar</p></div>
+  {% if user.is_staff %}<a class="btn btn-primary" href="{% url 'properties:create' %}">+ Obyekt qo'shish</a>{% endif %}
+</div>
+<form class="card filters" method="get" style="margin-bottom:18px">
+  <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Nomi yoki manzil">
+  <select name="type" aria-label="Turi">
+    <option value="">Barcha turlar</option>
+    <option value="house" {% if request.GET.type == 'house' %}selected{% endif %}>Uy</option>
+    <option value="apartment" {% if request.GET.type == 'apartment' %}selected{% endif %}>Kvartira</option>
+  </select>
+  <select name="status" aria-label="Holati">
+    <option value="">Barcha holatlar</option>
+    <option value="available" {% if request.GET.status == 'available' %}selected{% endif %}>Bo'sh</option>
+    <option value="sold" {% if request.GET.status == 'sold' %}selected{% endif %}>Sotilgan</option>
+    <option value="rented" {% if request.GET.status == 'rented' %}selected{% endif %}>Ijarada</option>
+  </select>
+  <input type="number" name="min_price" value="{{ request.GET.min_price }}" placeholder="Narx dan" min="0">
+  <input type="number" name="max_price" value="{{ request.GET.max_price }}" placeholder="Narx gacha" min="0">
+  <button class="btn btn-primary" type="submit">Qidirish</button>
+  <a class="btn" href="{% url 'properties:list' %}">Tozalash</a>
+</form>
+{% if object_list %}
+<div class="grid grid-3">
+  {% for property in object_list %}{% include "includes/property_card.html" %}{% endfor %}
+</div>
+<div class="card" style="margin-top:18px">{% include "includes/pagination.html" %}</div>
+{% else %}
+<div class="card"><div class="empty"><strong>Obyekt topilmadi</strong>Filtrlarni o'zgartiring yoki yangi obyekt qo'shing.</div></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,7 @@
+{% if messages %}
+<ul class="messages" role="status">
+  {% for m in messages %}
+  <li class="msg {{ m.tags }}"><span>{{ m }}</span><button type="button" data-dismiss aria-label="Yopish">×</button></li>
+  {% endfor %}
+</ul>
+{% endif %}

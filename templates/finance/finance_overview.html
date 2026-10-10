@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Moliya{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Moliya</h1><p>Daromad, xarajat va foyda hisoboti</p></div>
+  <a class="btn btn-primary" href="{% url 'finance:create' %}">+ Operatsiya qo'shish</a>
+</div>
+<div class="grid grid-3" style="margin-bottom:18px">
+  <div class="card stat"><div class="label">Umumiy daromad</div><div class="value">{{ total_income|default:0|floatformat:0 }}</div></div>
+  <div class="card stat"><div class="label">Umumiy xarajat</div><div class="value">{{ total_expense|default:0|floatformat:0 }}</div></div>
+  <div class="card stat"><div class="label">Sof foyda</div><div class="value">{{ profit|default:0|floatformat:0 }}</div></div>
+</div>
+<div class="card">
+  <div class="card-head"><h2>Operatsiyalar</h2><input type="search" placeholder="Qidirish…" data-filter="#fin-table" style="max-width:240px"></div>
+  <div class="table-wrap"><table class="table" id="fin-table">
+    <thead><tr><th>Sana</th><th>Toifa</th><th>Tavsif</th><th>Turi</th><th class="right">Summa</th><th></th></tr></thead>
+    <tbody>
+    {% for t in object_list %}
+      <tr>
+        <td>{{ t.date|date:"d.m.Y" }}</td><td>{{ t.category|default:"—" }}</td><td>{{ t.description|default:"—" }}</td>
+        <td><span class="badge badge-{{ t.type }}">{% if t.type == 'income' %}Daromad{% else %}Xarajat{% endif %}</span></td>
+        <td class="right nowrap"><strong>{% if t.type == 'expense' %}−{% endif %}{{ t.amount|floatformat:0 }}</strong></td>
+        <td class="right"><a class="btn btn-sm" href="{% url 'finance:update' t.pk %}">Tahrirlash</a></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6"><div class="empty"><strong>Operatsiyalar yo'q</strong>Daromad yoki xarajat qo'shing.</div></td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

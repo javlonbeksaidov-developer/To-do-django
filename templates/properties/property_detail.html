@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{{ object.title }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="{% url 'properties:list' %}">Uy-joylar</a> / {{ object.title }}</div>
+    <h1>{{ object.title }} <span class="badge badge-{{ object.status }}">{{ object.get_status_display|default:object.status }}</span></h1>
+    <p>{{ object.location|default:object.address }}</p>
+  </div>
+  <div class="actions no-print">
+    {% if user.is_staff %}
+      <a class="btn" href="{% url 'properties:update' object.pk %}">Tahrirlash</a>
+      <a class="btn btn-danger" href="{% url 'properties:delete' object.pk %}">O'chirish</a>
+    {% endif %}
+    <button class="btn" type="button" data-print>Chop etish</button>
+  </div>
+</div>
+<div class="grid grid-side">
+  <div class="grid">
+    <div class="gallery">
+      <div class="main-img">{% if object.image %}<img src="{{ object.image.url }}" alt="{{ object.title }}">{% endif %}</div>
+      <div class="thumbs">{% for img in object.images.all|slice:":2" %}<img src="{{ img.image.url }}" alt="">{% endfor %}</div>
+    </div>
+    <div class="card"><div class="card-head"><h2>Xususiyatlari</h2></div>
+      <div class="card-body"><dl class="spec">
+        <div><dt>Xonalar</dt><dd>{{ object.rooms }}</dd></div>
+        <div><dt>Maydon</dt><dd>{{ object.area }} m²</dd></div>
+        <div><dt>Qavat</dt><dd>{{ object.floor|default:"—" }}</dd></div>
+        <div><dt>Turi</dt><dd>{{ object.get_property_type_display|default:"—" }}</dd></div>
+        <div><dt>Qo'shilgan</dt><dd>{{ object.created_at|date:"d.m.Y" }}</dd></div>
+        <div><dt>Mas'ul agent</dt><dd>{{ object.agent|default:"—" }}</dd></div>
+      </dl></div></div>
+    <div class="card"><div class="card-head"><h2>Tavsif</h2></div>
+      <div class="card-body">{{ object.description|linebreaks|default:"Tavsif kiritilmagan." }}</div></div>
+  </div>
+  <aside class="grid" style="align-content:start">
+    <div class="card"><div class="card-body">
+      <div class="muted">Narxi</div>
+      <div class="prop-price" style="font-size:1.8rem">{{ object.price|floatformat:0 }} <small>{{ object.currency|default:"$" }}</small></div>
+      {% if object.status == 'available' %}
+      <div class="actions" style="margin-top:16px">
+        <a class="btn btn-primary" href="{% url 'sales:create' %}?property={{ object.pk }}">Sotuvga rasmiylashtirish</a>
+        <a class="btn" href="{% url 'rentals:create' %}?property={{ object.pk }}">Ijaraga berish</a>
+      </div>{% endif %}
+      <form method="post" action="{% url 'favorites:toggle' object.pk %}" data-ajax="favorite" style="margin-top:12px">{% csrf_token %}
+        <button class="btn" type="submit" style="width:100%">♥ Sevimlilarga qo'shish</button>
+      </form>
+    </div></div>
+  </aside>
+</div>
+{% endblock %}

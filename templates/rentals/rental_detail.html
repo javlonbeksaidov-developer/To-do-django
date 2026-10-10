@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Ijara #{{ object.pk }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="{% url 'rentals:list' %}">Ijaralar</a> / #{{ object.pk }}</div>
+    <h1>Ijara #{{ object.pk }} <span class="badge badge-{{ object.status }}">{{ object.get_status_display|default:object.status }}</span></h1>
+  </div>
+  <div class="actions no-print">
+    <a class="btn" href="{% url 'rentals:update' object.pk %}">Tahrirlash</a>
+    <a class="btn" href="{% url 'payments:create' %}?rental={{ object.pk }}">+ To'lov qo'shish</a>
+    <button class="btn" type="button" data-print>Chop etish</button>
+  </div>
+</div>
+<div class="grid grid-2">
+  <div class="card"><div class="card-head"><h2>Shartnoma</h2></div><div class="card-body"><dl class="dl">
+    <dt>Obyekt</dt><dd><a href="{% url 'properties:detail' object.property.pk %}">{{ object.property }}</a></dd>
+    <dt>Ijarachi</dt><dd>{{ object.tenant }}</dd>
+    <dt>Oylik narx</dt><dd>{{ object.monthly_price|floatformat:0 }} {{ object.currency|default:"$" }}</dd>
+    <dt>Boshlanish</dt><dd>{{ object.start_date|date:"d.m.Y" }}</dd>
+    <dt>Tugash</dt><dd>{{ object.end_date|date:"d.m.Y" }}</dd>
+    <dt>Depozit</dt><dd>{{ object.deposit|floatformat:0|default:"—" }}</dd>
+  </dl></div></div>
+  <div class="card"><div class="card-head"><h2>To'lovlar</h2><a class="btn btn-sm" href="{% url 'payments:list' %}?rental={{ object.pk }}">Hammasi</a></div>
+    <div class="table-wrap"><table class="table"><thead><tr><th>Sana</th><th>Summa</th><th>Holat</th></tr></thead><tbody>
+    {% for p in object.payments.all %}
+      <tr><td>{{ p.date|date:"d.m.Y" }}</td><td>{{ p.amount|floatformat:0 }}</td><td><span class="badge badge-{{ p.status }}">{{ p.get_status_display|default:p.status }}</span></td></tr>
+    {% empty %}<tr><td colspan="3"><div class="empty">To'lov kiritilmagan</div></td></tr>{% endfor %}
+    </tbody></table></div></div>
+</div>
+{% endblock %}

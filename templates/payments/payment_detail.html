@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}To'lov #{{ object.pk }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="{% url 'payments:list' %}">To'lovlar</a> / #{{ object.pk }}</div>
+    <h1>To'lov #{{ object.pk }} <span class="badge badge-{{ object.status }}">{{ object.get_status_display|default:object.status }}</span></h1>
+  </div>
+  <div class="actions no-print">
+    <a class="btn" href="{% url 'payments:update' object.pk %}">Tahrirlash</a>
+    <button class="btn btn-primary" type="button" data-print>Kvitansiyani chop etish</button>
+  </div>
+</div>
+<div class="card" style="max-width:640px"><div class="card-body"><dl class="dl">
+  <dt>Summa</dt><dd style="font-size:1.3rem">{{ object.amount|floatformat:0 }} {{ object.currency|default:"$" }}</dd>
+  <dt>Sana</dt><dd>{{ object.date|date:"d.m.Y" }}</dd>
+  <dt>Bitim</dt><dd>{% if object.sale %}<a href="{% url 'sales:detail' object.sale.pk %}">Sotuv #{{ object.sale.pk }}</a>{% elif object.rental %}<a href="{% url 'rentals:detail' object.rental.pk %}">Ijara #{{ object.rental.pk }}</a>{% else %}—{% endif %}</dd>
+  <dt>To'lov usuli</dt><dd>{{ object.get_method_display|default:"—" }}</dd>
+  <dt>Izoh</dt><dd>{{ object.note|default:"—" }}</dd>
+</dl></div></div>
+{% endblock %}

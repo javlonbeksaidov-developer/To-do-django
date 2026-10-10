@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Sotuv #{{ object.pk }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="{% url 'sales:list' %}">Sotuvlar</a> / #{{ object.pk }}</div>
+    <h1>Sotuv #{{ object.pk }} <span class="badge badge-{{ object.status }}">{{ object.get_status_display|default:object.status }}</span></h1>
+  </div>
+  <div class="actions no-print">
+    <a class="btn" href="{% url 'sales:update' object.pk %}">Tahrirlash</a>
+    <a class="btn" href="{% url 'payments:create' %}?sale={{ object.pk }}">+ To'lov qo'shish</a>
+    <button class="btn" type="button" data-print>Chop etish</button>
+  </div>
+</div>
+<div class="grid grid-2">
+  <div class="card"><div class="card-head"><h2>Bitim</h2></div><div class="card-body"><dl class="dl">
+    <dt>Obyekt</dt><dd><a href="{% url 'properties:detail' object.property.pk %}">{{ object.property }}</a></dd>
+    <dt>Xaridor</dt><dd>{{ object.buyer }}</dd>
+    <dt>Agent</dt><dd>{{ object.agent|default:"—" }}</dd>
+    <dt>Narx</dt><dd>{{ object.price|floatformat:0 }} {{ object.currency|default:"$" }}</dd>
+    <dt>Sana</dt><dd>{{ object.date|date:"d.m.Y" }}</dd>
+    <dt>Izoh</dt><dd>{{ object.note|default:"—" }}</dd>
+  </dl></div></div>
+  <div class="card"><div class="card-head"><h2>To'lovlar</h2><a class="btn btn-sm" href="{% url 'payments:list' %}?sale={{ object.pk }}">Hammasi</a></div>
+    <div class="table-wrap"><table class="table"><thead><tr><th>Sana</th><th>Summa</th><th>Holat</th></tr></thead><tbody>
+    {% for p in object.payments.all %}
+      <tr><td>{{ p.date|date:"d.m.Y" }}</td><td>{{ p.amount|floatformat:0 }}</td><td><span class="badge badge-{{ p.status }}">{{ p.get_status_display|default:p.status }}</span></td></tr>
+    {% empty %}<tr><td colspan="3"><div class="empty">To'lov kiritilmagan</div></td></tr>{% endfor %}
+    </tbody></table></div></div>
+</div>
+{% endblock %}

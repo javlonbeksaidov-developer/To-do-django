@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Sevimlilar{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Sevimlilar</h1><p>Saqlab qo'ygan obyektlaringiz</p></div></div>
+{% if object_list %}
+<div class="grid grid-3 fav-page">
+  {% for fav in object_list %}{% include "includes/property_card.html" with property=fav.property %}{% endfor %}
+</div>
+<div class="card" style="margin-top:18px">{% include "includes/pagination.html" %}</div>
+{% else %}
+<div class="card"><div class="empty"><strong>Sevimlilar bo'sh</strong>Obyekt kartasidagi ♥ tugmasini bosib saqlang.
+  <div style="margin-top:14px"><a class="btn btn-primary" href="{% url 'properties:list' %}">Obyektlarni ko'rish</a></div></div></div>
+{% endif %}
+{% endblock %}

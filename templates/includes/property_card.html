@@ -1,0 +1,21 @@
+{# Kerak: property (Property obyekti) #}
+<article class="card prop-card">
+  <div class="prop-media">
+    <a href="{% url 'properties:detail' property.pk %}">
+      {% if property.image %}<img src="{{ property.image.url }}" alt="{{ property.title }}" loading="lazy">{% endif %}
+    </a>
+    <span class="badge badge-{{ property.status }}">{{ property.get_status_display|default:property.status }}</span>
+    <form class="prop-fav" method="post" action="{% url 'favorites:toggle' property.pk %}" data-ajax="favorite">{% csrf_token %}
+      <button class="fav-btn {% if property.pk in favorite_ids %}on{% endif %}" type="submit" aria-label="Sevimlilarga qo'shish">♥</button>
+    </form>
+  </div>
+  <div class="prop-body">
+    <div class="prop-price">{{ property.price|floatformat:0 }} <small>{{ property.currency|default:"$" }}</small></div>
+    <a class="prop-title" href="{% url 'properties:detail' property.pk %}">{{ property.title }}</a>
+    <span class="muted">{{ property.location|default:property.address }}</span>
+    <div class="prop-meta">
+      <span>{{ property.rooms }} xona</span><span>{{ property.area }} m²</span>
+      {% if property.floor %}<span>{{ property.floor }}-qavat</span>{% endif %}
+    </div>
+  </div>
+</article>

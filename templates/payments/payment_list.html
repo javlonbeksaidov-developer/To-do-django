@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}To'lovlar{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>To'lovlar</h1><p>Sotuv va ijara bo'yicha kelib tushgan to'lovlar</p></div>
+  <a class="btn btn-primary" href="{% url 'payments:create' %}">+ To'lov qo'shish</a>
+</div>
+<div class="card">
+  <div class="filters"><input type="search" placeholder="Jadvaldan qidirish…" data-filter="#payments-table"></div>
+  <div class="table-wrap"><table class="table" id="payments-table">
+    <thead><tr><th>Sana</th><th>Bitim</th><th>Summa</th><th>Usul</th><th>Holat</th><th></th></tr></thead>
+    <tbody>
+    {% for payment in object_list %}
+      <tr>
+        <td>{{ payment.date|date:"d.m.Y" }}</td>
+        <td><a href="{% url 'payments:detail' payment.pk %}">{% if payment.sale %}Sotuv #{{ payment.sale.pk }}{% elif payment.rental %}Ijara #{{ payment.rental.pk }}{% else %}—{% endif %}</a></td>
+        <td class="nowrap"><strong>{{ payment.amount|floatformat:0 }}</strong> {{ payment.currency|default:"$" }}</td>
+        <td>{{ payment.get_method_display|default:"—" }}</td>
+        <td><span class="badge badge-{{ payment.status }}">{{ payment.get_status_display|default:payment.status }}</span></td>
+        <td class="right nowrap"><a class="btn btn-sm" href="{% url 'payments:update' payment.pk %}">Tahrirlash</a></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6"><div class="empty"><strong>To'lovlar yo'q</strong>Birinchi to'lovni kiriting.</div></td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

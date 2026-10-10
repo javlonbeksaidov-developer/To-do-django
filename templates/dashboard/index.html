@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Boshqaruv paneli{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Boshqaruv paneli</h1><p>Kompaniya faoliyatining umumiy ko'rinishi</p></div>
+  <a class="btn btn-primary" href="{% url 'properties:create' %}">+ Obyekt qo'shish</a>
+</div>
+<div class="grid grid-4" style="margin-bottom:18px">
+  <div class="card stat"><div class="label">Jami obyektlar</div><div class="value">{{ total_properties|default:0 }}</div><div class="muted">{{ available_count|default:0 }} tasi bo'sh</div></div>
+  <div class="card stat"><div class="label">Sotuvlar</div><div class="value">{{ sales_count|default:0 }}</div></div>
+  <div class="card stat"><div class="label">Faol ijaralar</div><div class="value">{{ rentals_count|default:0 }}</div></div>
+  <div class="card stat"><div class="label">Oylik daromad</div><div class="value">{{ monthly_income|default:0|floatformat:0 }}</div>
+    {% if overdue_count %}<div class="delta down">{{ overdue_count }} ta to'lov kechikkan</div>{% endif %}</div>
+</div>
+<div class="grid grid-side">
+  <div class="card">
+    <div class="card-head"><h2>Oylik daromad va xarajat</h2>
+      <div class="legend"><span><i></i>Daromad</span><span><i class="b2"></i>Xarajat</span></div></div>
+    <div class="card-body"><div class="bars" id="bar-chart" role="img" aria-label="Oylik daromad va xarajat diagrammasi"></div></div>
+    {% if chart_data %}{{ chart_data|json_script:"chart-data" }}{% endif %}
+  </div>
+  <div class="card">
+    <div class="card-head"><h2>So'nggi to'lovlar</h2><a href="{% url 'payments:list' %}">Hammasi</a></div>
+    <div class="table-wrap"><table class="table"><tbody>
+    {% for p in recent_payments %}
+      <tr><td>{{ p.date|date:"d.m" }}</td><td><strong>{{ p.amount|floatformat:0 }}</strong></td><td><span class="badge badge-{{ p.status }}">{{ p.get_status_display|default:p.status }}</span></td></tr>
+    {% empty %}<tr><td><div class="empty">To'lovlar yo'q</div></td></tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+</div>
+<div class="card" style="margin-top:18px">
+  <div class="card-head"><h2>So'nggi sotuvlar</h2><a href="{% url 'sales:list' %}">Hammasi</a></div>
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>Obyekt</th><th>Xaridor</th><th>Narx</th><th>Sana</th><th>Holat</th></tr></thead><tbody>
+    {% for s in recent_sales %}
+      <tr><td><a href="{% url 'sales:detail' s.pk %}">{{ s.property }}</a></td><td>{{ s.buyer }}</td><td>{{ s.price|floatformat:0 }}</td><td>{{ s.date|date:"d.m.Y" }}</td>
+      <td><span class="badge badge-{{ s.status }}">{{ s.get_status_display|default:s.status }}</span></td></tr>
+    {% empty %}<tr><td colspan="5"><div class="empty">Sotuvlar yo'q</div></td></tr>{% endfor %}
+  </tbody></table></div>
+</div>
+{% endblock %}

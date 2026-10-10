@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Boshqaruv paneli{% endblock %} | UyBor</title>
+  <script>try { document.documentElement.dataset.theme = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') } catch (e) { }</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+  <div class="app" id="app">
+    {% include "includes/sidebar.html" %}
+    <div class="main">
+      <header class="topbar">
+        <button class="btn menu-btn" type="button" data-nav-toggle aria-label="Menyuni ochish">☰</button>
+        <div class="grow">
+          <form action="{% url 'properties:list' %}" method="get" role="search">
+            <label class="sr-only" for="global-q">Qidirish</label>
+            <input id="global-q" type="search" name="q" placeholder="Uy yoki kvartira qidirish…"
+              style="max-width:420px">
+          </form>
+        </div>
+        <button class="btn btn-sm" type="button" data-theme-toggle
+          aria-label="Mavzuni almashtirish">Tungi/Kunduzgi</button>
+        <a class="btn btn-sm" href="{% url 'notifications:list' %}">Bildirishnomalar{% if unread_notifications_count %}
+          ({{ unread_notifications_count }}){% endif %}</a>
+      </header>
+      <main class="content">
+        {% include "includes/messages.html" %}
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+  <script src="{% static 'js/main.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+
+</html>

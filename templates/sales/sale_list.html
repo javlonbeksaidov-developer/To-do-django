@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Sotuvlar{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Sotuvlar</h1><p>Uy va kvartira sotuv bitimlari</p></div>
+  <a class="btn btn-primary" href="{% url 'sales:create' %}">+ Yangi sotuv</a>
+</div>
+<div class="card">
+  <div class="filters">
+    <input type="search" placeholder="Jadvaldan qidirish…" data-filter="#sales-table">
+    <select name="status" data-autosubmit onchange="location.search='?status='+this.value">
+      <option value="">Barcha holatlar</option>
+      <option value="pending">Kutilmoqda</option><option value="completed">Yakunlangan</option><option value="cancelled">Bekor qilingan</option>
+    </select>
+  </div>
+  <div class="table-wrap"><table class="table" id="sales-table">
+    <thead><tr><th>#</th><th>Obyekt</th><th>Xaridor</th><th>Narx</th><th>Sana</th><th>Holat</th><th></th></tr></thead>
+    <tbody>
+    {% for sale in object_list %}
+      <tr>
+        <td>{{ sale.pk }}</td>
+        <td><a href="{% url 'sales:detail' sale.pk %}"><strong>{{ sale.property }}</strong></a></td>
+        <td>{{ sale.buyer }}</td>
+        <td class="nowrap"><strong>{{ sale.price|floatformat:0 }}</strong> {{ sale.currency|default:"$" }}</td>
+        <td>{{ sale.date|date:"d.m.Y" }}</td>
+        <td><span class="badge badge-{{ sale.status }}">{{ sale.get_status_display|default:sale.status }}</span></td>
+        <td class="right nowrap">
+          <a class="btn btn-sm" href="{% url 'sales:update' sale.pk %}">Tahrirlash</a>
+          <a class="btn btn-sm btn-danger" href="{% url 'sales:delete' sale.pk %}">O'chirish</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="7"><div class="empty"><strong>Sotuvlar yo'q</strong>Birinchi sotuv bitimini yarating.</div></td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

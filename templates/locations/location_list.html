@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Hududlar{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Hududlar</h1><p>Viloyat, tuman va mahallalar</p></div>
+  <a class="btn btn-primary" href="{% url 'locations:create' %}">+ Hudud qo'shish</a>
+</div>
+<div class="card">
+  <div class="filters"><input type="search" placeholder="Hududni qidirish…" data-filter="#loc-table"></div>
+  <div class="table-wrap"><table class="table" id="loc-table">
+    <thead><tr><th>Nomi</th><th>Tegishli hudud</th><th>Obyektlar soni</th><th></th></tr></thead>
+    <tbody>
+    {% for loc in object_list %}
+      <tr>
+        <td><strong>{{ loc.name }}</strong></td><td>{{ loc.parent|default:"—" }}</td>
+        <td><a href="{% url 'properties:list' %}?location={{ loc.pk }}">{{ loc.properties.count }}</a></td>
+        <td class="right nowrap">
+          <a class="btn btn-sm" href="{% url 'locations:update' loc.pk %}">Tahrirlash</a>
+          <a class="btn btn-sm btn-danger" href="{% url 'locations:delete' loc.pk %}">O'chirish</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4"><div class="empty"><strong>Hududlar yo'q</strong>Birinchi hududni qo'shing.</div></td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

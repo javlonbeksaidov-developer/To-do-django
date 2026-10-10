@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Profil{% endblock %}
+{% block content %}
+<div class="page-head"><h1>Mening profilim</h1></div>
+<div class="grid grid-side">
+  <form method="post" enctype="multipart/form-data" class="card" novalidate>
+    <div class="card-head"><h2>Shaxsiy ma'lumotlar</h2></div>
+    <div class="card-body">{% csrf_token %}
+      <div class="form-grid">{% include "includes/form_fields.html" %}</div>
+      <div class="form-actions"><button class="btn btn-primary" type="submit">Saqlash</button></div>
+    </div>
+  </form>
+  <div class="card"><div class="card-head"><h2>Hisob</h2></div>
+    <div class="card-body"><dl class="dl">
+      <dt>Login</dt><dd>{{ user.username }}</dd>
+      <dt>Rol</dt><dd>{{ user.get_role_display|default:"—" }}</dd>
+      <dt>Qo'shilgan</dt><dd>{{ user.date_joined|date:"d.m.Y" }}</dd>
+    </dl></div></div>
+</div>
+{% endblock %}

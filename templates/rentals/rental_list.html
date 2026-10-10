@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Ijaralar{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Ijaralar</h1><p>Ijara shartnomalari va muddatlari</p></div>
+  <a class="btn btn-primary" href="{% url 'rentals:create' %}">+ Yangi ijara</a>
+</div>
+<div class="card">
+  <div class="filters"><input type="search" placeholder="Jadvaldan qidirish…" data-filter="#rentals-table"></div>
+  <div class="table-wrap"><table class="table" id="rentals-table">
+    <thead><tr><th>#</th><th>Obyekt</th><th>Ijarachi</th><th>Oylik narx</th><th>Muddat</th><th>Holat</th><th></th></tr></thead>
+    <tbody>
+    {% for rental in object_list %}
+      <tr>
+        <td>{{ rental.pk }}</td>
+        <td><a href="{% url 'rentals:detail' rental.pk %}"><strong>{{ rental.property }}</strong></a></td>
+        <td>{{ rental.tenant }}</td>
+        <td class="nowrap"><strong>{{ rental.monthly_price|floatformat:0 }}</strong> {{ rental.currency|default:"$" }}</td>
+        <td class="nowrap">{{ rental.start_date|date:"d.m.Y" }} – {{ rental.end_date|date:"d.m.Y" }}</td>
+        <td><span class="badge badge-{{ rental.status }}">{{ rental.get_status_display|default:rental.status }}</span></td>
+        <td class="right nowrap">
+          <a class="btn btn-sm" href="{% url 'rentals:update' rental.pk %}">Tahrirlash</a>
+          <a class="btn btn-sm btn-danger" href="{% url 'rentals:delete' rental.pk %}">O'chirish</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="7"><div class="empty"><strong>Ijaralar yo'q</strong>Birinchi ijara shartnomasini yarating.</div></td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

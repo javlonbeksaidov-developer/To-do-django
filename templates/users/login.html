@@ -1,0 +1,12 @@
+{% extends "base_auth.html" %}
+{% block title %}Kirish{% endblock %}
+{% block content %}
+<h1>Tizimga kirish</h1>
+<p class="muted">Login va parolingizni kiriting.</p>
+<form method="post" novalidate>{% csrf_token %}
+  {% include "includes/form_fields.html" %}
+  {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+  <button class="btn btn-primary" type="submit" style="width:100%">Kirish</button>
+</form>
+<p style="margin-top:18px" class="muted">Hisobingiz yo'qmi? <a href="{% url 'users:register' %}">Ro'yxatdan o'tish</a></p>
+{% endblock %}

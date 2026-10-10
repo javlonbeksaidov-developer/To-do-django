@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Foydalanuvchilar{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Foydalanuvchilar</h1><p>Mijozlar, agentlar va xodimlar</p></div>
+  <a class="btn btn-primary" href="{% url 'users:create' %}">+ Foydalanuvchi qo'shish</a>
+</div>
+<div class="card">
+  <div class="filters"><input type="search" placeholder="Jadvaldan qidirish…" data-filter="#users-table"></div>
+  <div class="table-wrap"><table class="table" id="users-table">
+    <thead><tr><th>F.I.Sh.</th><th>Login</th><th>Telefon</th><th>Rol</th><th>Holat</th><th></th></tr></thead>
+    <tbody>
+    {% for u in object_list %}
+      <tr>
+        <td><strong>{{ u.get_full_name|default:"—" }}</strong><div class="muted">{{ u.email }}</div></td>
+        <td>{{ u.username }}</td><td>{{ u.phone|default:"—" }}</td>
+        <td>{{ u.get_role_display|default:"—" }}</td>
+        <td><span class="badge badge-{% if u.is_active %}active{% else %}cancelled{% endif %}">{% if u.is_active %}Faol{% else %}Bloklangan{% endif %}</span></td>
+        <td class="right nowrap"><a class="btn btn-sm" href="{% url 'users:update' u.pk %}">Tahrirlash</a></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6"><div class="empty"><strong>Foydalanuvchilar yo'q</strong>Birinchi foydalanuvchini qo'shing.</div></td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

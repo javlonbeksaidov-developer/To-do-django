@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Bildirishnomalar{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Bildirishnomalar</h1><p>Yangi to'lovlar, muddatlar va bitimlar haqida xabarlar</p></div>
+  <form method="post" action="{% url 'notifications:read_all' %}">{% csrf_token %}<button class="btn" type="submit">Hammasini o'qilgan deb belgilash</button></form>
+</div>
+<div class="card">
+  {% for n in object_list %}
+  <div class="notif {% if not n.is_read %}unread{% endif %}">
+    <span class="dot" aria-hidden="true"></span>
+    <div class="notif-body">
+      <strong>{{ n.title }}</strong>
+      <div>{{ n.message }}</div>
+      <small class="muted">{{ n.created_at|timesince }} oldin</small>
+    </div>
+    {% if not n.is_read %}
+    <form method="post" action="{% url 'notifications:read' n.pk %}" data-ajax="read">{% csrf_token %}
+      <button class="btn btn-sm" type="submit">O'qildi</button>
+    </form>{% endif %}
+  </div>
+  {% empty %}
+  <div class="empty"><strong>Yangi xabarlar yo'q</strong>Hozircha bildirishnoma kelmagan.</div>
+  {% endfor %}
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

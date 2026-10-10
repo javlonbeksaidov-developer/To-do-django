@@ -1,0 +1,29 @@
+{% load static %}<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Kirish{% endblock %} | UyBor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+<div class="auth">
+  <aside class="auth-side">
+    <div class="brand"><span class="brand-mark">U</span> UyBor</div>
+    <div>
+      <h1>Uy va kvartira savdosi bir joyda</h1>
+      <p>Obyektlar, sotuvlar, ijaralar va to'lovlarni bitta tizimda yuriting.</p>
+    </div>
+    <small class="muted">© {% now "Y" %} UyBor</small>
+  </aside>
+  <section class="auth-form">
+    <div class="auth-box">
+      {% include "includes/messages.html" %}
+      {% block content %}{% endblock %}
+    </div>
+  </section>
+</div>
+<script src="{% static 'js/main.js' %}" defer></script>
+</body>
+</html>

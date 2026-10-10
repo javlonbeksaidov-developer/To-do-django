@@ -1,0 +1,29 @@
+{% with app=request.resolver_match.app_name %}
+<aside class="sidebar" id="sidebar" aria-label="Asosiy menyu">
+  <a class="brand" href="{% url 'dashboard:index' %}"><span class="brand-mark">U</span> UyBor</a>
+  <nav class="nav">
+    <a href="{% url 'dashboard:index' %}" class="{% if app == 'dashboard' %}active{% endif %}">Boshqaruv paneli</a>
+    <div class="nav-group">Obyektlar</div>
+    <a href="{% url 'properties:list' %}" class="{% if app == 'properties' %}active{% endif %}">Uy-joylar</a>
+    <a href="{% url 'locations:list' %}" class="{% if app == 'locations' %}active{% endif %}">Hududlar</a>
+    <a href="{% url 'favorites:list' %}" class="{% if app == 'favorites' %}active{% endif %}">Sevimlilar</a>
+    <div class="nav-group">Bitimlar</div>
+    <a href="{% url 'sales:list' %}" class="{% if app == 'sales' %}active{% endif %}">Sotuvlar</a>
+    <a href="{% url 'rentals:list' %}" class="{% if app == 'rentals' %}active{% endif %}">Ijaralar</a>
+    <a href="{% url 'payments:list' %}" class="{% if app == 'payments' %}active{% endif %}">To'lovlar</a>
+    {% if user.is_staff %}
+    <div class="nav-group">Boshqaruv</div>
+    <a href="{% url 'finance:overview' %}" class="{% if app == 'finance' %}active{% endif %}">Moliya</a>
+    <a href="{% url 'users:list' %}" class="{% if app == 'users' and request.resolver_match.url_name == 'list' %}active{% endif %}">Foydalanuvchilar</a>
+    {% endif %}
+    <a href="{% url 'notifications:list' %}" class="{% if app == 'notifications' %}active{% endif %}">Bildirishnomalar
+      {% if unread_notifications_count %}<span class="count">{{ unread_notifications_count }}</span>{% endif %}</a>
+  </nav>
+  <div class="side-foot">
+    <a href="{% url 'users:profile' %}" style="color:#fff;font-weight:700">{{ user.get_full_name|default:user.username }}</a>
+    <form method="post" action="{% url 'users:logout' %}" style="margin-top:8px">{% csrf_token %}
+      <button class="btn btn-sm" type="submit">Chiqish</button>
+    </form>
+  </div>
+</aside>
+{% endwith %}
